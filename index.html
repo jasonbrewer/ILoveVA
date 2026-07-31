@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Link preview image (iMessage, Facebook, X, LinkedIn, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ilovevirginiatvshow.com/">
+<meta property="og:site_name" content="I ♥ Virginia">
+<meta property="og:title" content="I ♥ Virginia — a pop-culture clip show for VPM">
+<meta property="og:description" content="A fast-paced, pop-culture clip show about the iconic places, weird legends, and unforgettable stories that make Virginia, Virginia.">
+<meta property="og:image" content="https://ilovevirginiatvshow.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="I ♥ Virginia — a pop-culture clip show for VPM">
+<meta name="twitter:description" content="Iconic places, weird legends, and unforgettable Virginia stories — cut into a fast, funny half-hour.">
+<meta name="twitter:image" content="https://ilovevirginiatvshow.com/og-image.jpg">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>I ♥ Virginia — a pop-culture clip show for VPM</title>
@@ -673,7 +686,7 @@
 </footer>
 
 <script>
-  // long-shadow generator for the VIRGINIA wordmark (down-right, flat, like the deck logo)
+// long-shadow generator for the VIRGINIA wordmark
   (function(){
     var wm = document.getElementById('wm');
     if(!wm) return;
@@ -698,19 +711,18 @@
     a.addEventListener('click', function(){ panel.classList.remove('open'); });
   });
 
- // drop-in synth backgrounds: any <section data-bg-video="file.mp4"> gets a looping video bg
+  // drop-in synth backgrounds: any <section data-bg-video="file.mp4"> gets a looping video bg
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var bgVideos = [];
   document.querySelectorAll('[data-bg-video]').forEach(function(sec){
     var src = sec.getAttribute('data-bg-video');
     if(!src) return;
     sec.classList.add('has-bg-video');
-    if(reduceMotion) return; // respect reduced motion — keep the static background
+    if(reduceMotion) return;
     var veil = document.createElement('div');
     veil.className = 'section-bg-veil';
     var v = document.createElement('video');
     v.className = 'section-bg-video';
-    // iOS autoplay needs ALL of these, set before the source loads:
     v.muted = true; v.defaultMuted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
     v.setAttribute('muted','');
     v.setAttribute('playsinline','');
@@ -726,8 +738,7 @@
     bgVideos.push(v);
   });
 
-  // iOS won't start a video that's off-screen at load, and limits how many play at once.
-  // So play each background video only while it's on-screen, and pause it when it scrolls away.
+  // iOS won't start an off-screen video and limits how many play at once:
   if(bgVideos.length){
     var playBg = function(v){ var p = v.play(); if(p && p.catch){ p.catch(function(){}); } };
     if('IntersectionObserver' in window){
@@ -740,6 +751,16 @@
     } else {
       bgVideos.forEach(playBg);
     }
+  }
+
+  // scroll reveals — THIS is the part that un-hides your content
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:0.12});
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
   }
 </script>
 </body>
