@@ -698,8 +698,9 @@
     a.addEventListener('click', function(){ panel.classList.remove('open'); });
   });
 
-  // drop-in synth backgrounds: any <section data-bg-video="file.mp4"> gets a looping video bg
+ // drop-in synth backgrounds: any <section data-bg-video="file.mp4"> gets a looping video bg
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var bgVideos = [];
   document.querySelectorAll('[data-bg-video]').forEach(function(sec){
     var src = sec.getAttribute('data-bg-video');
     if(!src) return;
@@ -709,26 +710,36 @@
     veil.className = 'section-bg-veil';
     var v = document.createElement('video');
     v.className = 'section-bg-video';
-    v.muted = true; v.loop = true; v.autoplay = true;
-    v.setAttribute('muted',''); v.setAttribute('playsinline','');
+    // iOS autoplay needs ALL of these, set before the source loads:
+    v.muted = true; v.defaultMuted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
+    v.setAttribute('muted','');
+    v.setAttribute('playsinline','');
+    v.setAttribute('webkit-playsinline','');
     v.addEventListener('loadeddata', function(){ sec.classList.add('bg-video-ready'); });
     var s = document.createElement('source'); s.src = src;
     var ext = (src.split('.').pop() || '').toLowerCase();
     s.type = ext === 'webm' ? 'video/webm' : (ext === 'mov' ? 'video/quicktime' : (ext === 'ogv' ? 'video/ogg' : 'video/mp4'));
     v.appendChild(s);
+    v.load();
     sec.insertBefore(veil, sec.firstChild);
     sec.insertBefore(v, sec.firstChild);
-    var p = v.play(); if(p && p.catch){ p.catch(function(){}); }
+    bgVideos.push(v);
   });
 
-  // scroll reveals
-  if('IntersectionObserver' in window){
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, {threshold:0.12});
-    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
-  } else {
-    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+  // iOS won't start a video that's off-screen at load, and limits how many play at once.
+  // So play each background video only while it's on-screen, and pause it when it scrolls away.
+  if(bgVideos.length){
+    var playBg = function(v){ var p = v.play(); if(p && p.catch){ p.catch(function(){}); } };
+    if('IntersectionObserver' in window){
+      var vio = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ playBg(e.target); } else { e.target.pause(); }
+        });
+      }, {threshold:0.1});
+      bgVideos.forEach(function(v){ vio.observe(v); });
+    } else {
+      bgVideos.forEach(playBg);
+    }
   }
 </script>
 </body>
