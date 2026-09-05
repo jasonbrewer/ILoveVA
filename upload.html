@@ -11,8 +11,11 @@
     p.sub { color: #555; margin-top: 0; margin-bottom: 24px; line-height: 1.5; }
     .fields label { display: block; font-weight: 600; font-size: 0.9rem; margin: 12px 0 4px; }
     .fields input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
-    .note { font-size: 0.8rem; color: #777; margin-top: 20px; line-height: 1.4; }
+        .note { font-size: 1.2rem; color: #777; margin-top: 20px; line-height: 1.4; }
     #done { display: none; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 8px; padding: 16px; margin-top: 16px; color: #1b5e20; }
+    .consent { margin: 16px 0; padding: 14px 16px; font-size: 0.95rem; line-height: 1.45; border: 2px solid #d4a017; border-radius: 10px; background: #fffbea; }
+    .consent input { margin-right: 8px; transform: scale(1.3); vertical-align: middle; }
+    #uppy.locked { opacity: 0.4; pointer-events: none; }
   </style>
 </head>
 <body>
@@ -24,9 +27,26 @@
     <label for="uploaderEmail">Your email</label>
     <input type="email" id="uploaderEmail" placeholder="you@example.com">
   </div>
-  <div id="uppy"></div>
+  <div class="consent" id="consentBox1">
+    <label>
+      <input type="checkbox" id="agree">
+      <strong>Check this box to enable uploading.</strong>
+      By uploading, you're sharing these files with the production for possible use in the show and agree to the terms in the materials release link in the box below.
+    </label>
+  </div>
+  <div class="consent" id="consentBox2">
+    <label>
+      <input type="checkbox" id="agree2">
+      I will sign the materials release link
+      <a href="https://na1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhCXnEfEO_HfcZiGbpONGKO-WtarxT7Cgbe-Ihji5Aa5MvcLj3UYajYGWdcU4c-dd-w*">here</a>.
+    </label>
+  </div>
+  <div id="uppy" class="locked"></div>
+  <p id="hint" style="display:none; color:#b00020; font-weight:600; margin-top:8px;">Please check the box above before uploading.</p>
+
   <div id="done">Got it — your files are uploading or finished. You can close this page. Thank you!</div>
-  <p class="note">By uploading, you're sharing these files with the production for possible use in the show. Questions? Email jason@8postsmedia.com.</p>
+  <p> If you are having trouble with the upload tool or have any questions email Jason Brewer</p>
+
 
   <script type="module">
         import { Uppy, Dashboard, AwsS3 } from "https://releases.transloadit.com/uppy/v5.2.4/uppy.min.mjs";
@@ -83,6 +103,33 @@
       });
 
     uppy.on("complete", () => { document.getElementById("done").style.display = "block"; });
+    const agree = document.getElementById("agree");
+    const agree2 = document.getElementById("agree2");
+    const uppyEl = document.getElementById("uppy");
+    const hint = document.getElementById("hint");
+    const box1 = document.getElementById("consentBox1");
+    const box2 = document.getElementById("consentBox2");
+
+    function bothChecked() { return agree.checked && agree2.checked; }
+
+    function refreshLock() {
+      uppyEl.classList.toggle("locked", !bothChecked());
+      if (bothChecked()) hint.style.display = "none";
+    }
+    agree.addEventListener("change", refreshLock);
+    agree2.addEventListener("change", refreshLock);
+
+    uppyEl.addEventListener("click", () => {
+      if (!bothChecked()) {
+        hint.style.display = "block";
+        [ [agree, box1], [agree2, box2] ].forEach(([cb, box]) => {
+          if (!cb.checked) {
+            box.style.boxShadow = "0 0 0 3px rgba(212,160,23,0.5)";
+            setTimeout(() => { box.style.boxShadow = "none"; }, 1500);
+          }
+        });
+      }
+    }, true);
   </script>
 </body>
 </html>
