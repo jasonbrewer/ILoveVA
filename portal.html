@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Participant Portal — I Love Virginia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FBFAF7;
+      --ink: #1F2933;
+      --muted: #5A6472;
+      --line: #E6E3DC;
+      --card: #FFFFFF;
+      --badge-bg: #14213D;
+      --badge-num: #FFC300;
+      --c-schedule: #2B6CB0;
+      --c-appearance: #2C7A7B;
+      --c-materials: #B7791F;
+      --c-location: #2F855A;
+      --c-upload: #C05621;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--ink);
+      margin: 0; padding: 0; line-height: 1.6;
+    }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 40px 20px 64px; }
+
+    .kicker { font-size: 0.9rem; color: var(--muted); letter-spacing: 0.01em; margin: 0 0 6px; }
+    h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 2.4rem; line-height: 1.1; margin: 0 0 10px; }
+    .lead { font-size: 1.05rem; color: var(--muted); margin: 0 0 32px; max-width: 60ch; }
+
+    /* Top checklist — anchor links that scroll down */
+    .checklist { border-top: 1px solid var(--line); margin-bottom: 44px; }
+    .checklist a {
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 4px; border-bottom: 1px solid var(--line);
+      text-decoration: none; color: var(--ink); transition: background 0.15s;
+    }
+    .checklist a:hover { background: #F3F1EB; }
+    .num {
+      flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%;
+      background: var(--badge-bg); color: var(--badge-num);
+      font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.3rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .checklist .txt { flex: 1; }
+    .checklist .txt .t { font-weight: 600; font-size: 1.05rem; }
+    .checklist .txt .d { font-size: 0.9rem; color: var(--muted); }
+    .checklist .go { color: var(--muted); font-size: 1.2rem; }
+
+    /* Sections */
+    section { scroll-margin-top: 24px; margin-bottom: 48px; }
+    .head { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+    .head h2 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 1.5rem; margin: 0; }
+    .blurb { color: var(--muted); margin: 0 0 14px; }
+    .extlink { display: inline-block; font-size: 0.95rem; font-weight: 600; margin-bottom: 16px; text-decoration: none; }
+    .extlink:hover { text-decoration: underline; }
+    .frame {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      overflow: hidden;
+    }
+    .frame iframe { display: block; width: 100%; border: 0; }
+
+    /* Per-section accent */
+    #schedule .num, #appearance .num, #materials .num, #upload .num { }
+    #schedule .head h2 { color: var(--c-schedule); }
+    #appearance .head h2 { color: var(--c-appearance); }
+    #materials .head h2 { color: var(--c-materials); }
+    #location .head h2 { color: var(--c-location); }
+    #upload .head h2 { color: var(--c-upload); }
+    #schedule .frame { border-top: 4px solid var(--c-schedule); }
+    #appearance .frame { border-top: 4px solid var(--c-appearance); }
+    #materials .frame { border-top: 4px solid var(--c-materials); }
+    #location .frame { border-top: 4px solid var(--c-location); }
+    #upload .frame { border-top: 4px solid var(--c-upload); }
+    #schedule .extlink { color: var(--c-schedule); }
+    #appearance .extlink { color: var(--c-appearance); }
+    #materials .extlink { color: var(--c-materials); }
+    #location .extlink { color: var(--c-location); }
+    #upload .extlink { color: var(--c-upload); }
+
+    footer { border-top: 1px solid var(--line); padding-top: 20px; font-size: 0.9rem; color: var(--muted); }
+    footer a { color: inherit; }
+
+    @media (max-width: 560px) {
+      h1 { font-size: 1.9rem; }
+      .num { width: 36px; height: 36px; font-size: 1.1rem; }
+      .wrap { padding: 28px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <p class="kicker">I Love Virginia</p>
+    <h1>Participant portal</h1>
+    <p class="lead">Thanks for being part of the show. Everything you need is here — schedule your interview, sign the two releases, and send us your photos or video. Do them in order when you can.</p>
+
+    <!-- Top checklist: each row jumps down to its section -->
+    <nav class="checklist" aria-label="Steps">
+      <a href="#schedule">
+        <span class="num">1</span>
+        <span class="txt"><span class="t">Schedule your interview</span><br><span class="d"></span></span>
+        <span class="go" aria-hidden="true">&darr;</span>
+      </a>
+      <a href="#appearance">
+        <span class="num">2</span>
+        <span class="txt"><span class="t">Sign an appearance release</span><br><span class="d"></span></span>
+        <span class="go" aria-hidden="true">&darr;</span>
+      </a>
+      <a href="#materials">
+        <span class="num">3</span>
+        <span class="txt"><span class="t">Sign a materials release (Only if you are uploading video or photos)</span><br><span class="d"></span></span>
+        <span class="go" aria-hidden="true">&darr;</span>
+      </a>
+      <a href="#location">
+        <span class="num">4</span>
+        <span class="txt"><span class="t">Sign a location release (Only if we are filiming at your business or home)</span><br><span class="d"></span></span>
+        <span class="go" aria-hidden="true">&darr;</span>
+      </a>
+      <a href="#upload">
+        <span class="num">5</span>
+        <span class="txt"><span class="t">Upload material (Only if you have photos or videos to share)</span><br><span class="d"></span></span>
+        <span class="go" aria-hidden="true">&darr;</span>
+      </a>
+    </nav>
+
+    <!-- 1. SCHEDULE — Calendly. Replace the src/href with your Calendly link if different. -->
+    <section id="schedule">
+      <div class="head"><span class="num">1</span><h2>Schedule your interview</h2></div>
+      <p class="blurb">Choose an open slot below. Interview days are Oct 26–28.</p>
+      <a class="extlink" href="https://calendly.com/wipe_homing-4a/ilovevirginia" target="_blank" rel="noopener">Open the scheduler in a new tab</a>
+      <div class="frame">
+        <iframe src="https://calendly.com/wipe_homing-4a/ilovevirginia?hide_gdpr_banner=1" height="800" title="Schedule your interview"></iframe>
+      </div>
+    </section>
+
+    <!-- 2. APPEARANCE RELEASE — Adobe Sign. Replace the wid with your appearance-release link if different. -->
+    <section id="appearance">
+      <div class="head"><span class="num">2</span><h2>Sign an appearance release</h2></div>
+      <p class="blurb">This lets us include your on-camera interview in the show. Takes a couple of minutes.</p>
+      <a class="extlink" href="https://na1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhD2VxJkVbI5pJeaiH74ynxJs1tyuJRbnWCXKxgzl6iERLvhjviOwCC5ZhAxhtcD_-4*" target="_blank" rel="noopener">Open the release in a new tab</a>
+      <div class="frame">
+        <iframe src="https://na1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhD2VxJkVbI5pJeaiH74ynxJs1tyuJRbnWCXKxgzl6iERLvhjviOwCC5ZhAxhtcD_-4*&hosted=false" width="100%" height="100%" frameborder="0" style="border: 0; overflow: hidden;  min-height: 900px; min-width: 800px;"></iframe>
+    </section>
+    <!-- 3. MATERIALS RELEASE — Adobe Sign (the link you provided). -->
+    <section id="materials">
+      <div class="head"><span class="num">3</span><h2>Sign a materials release (Only if you are sharing photos or videos).</h2></div>
+      
+      <a class="extlink" href="https://na1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhCXnEfEO_HfcZiGbpONGKO-WtarxT7Cgbe-Ihji5Aa5MvcLj3UYajYGWdcU4c-dd-w*" target="_blank" rel="noopener">Open the release in a new tab</a>
+      <div class="frame">
+       <iframe src="https://na1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhCXnEfEO_HfcZiGbpONGKO-WtarxT7Cgbe-Ihji5Aa5MvcLj3UYajYGWdcU4c-dd-w*&hosted=false" width="100%" height="100%" frameborder="0" style="border: 0; overflow: hidden; min-height: 900px; min-width: 800px;"></iframe>
+      </div>
+    </section>
+
+    <!-- 4. LOCATION RELEASE — Adobe Sign. PASTE YOUR LOCATION-RELEASE LINK below (both the href and the src). -->
+    <section id="location">
+      <div class="head"><span class="num">4</span><h2>Sign a location release (only if we are filming at your business or home).</h2></div>
+     
+      <a class="extlink" href="PASTE_LOCATION_RELEASE_LINK_HERE" target="_blank" rel="noopener">Open the release in a new tab</a>
+      <div class="frame">
+        <iframe src="https://na1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhAWitgZvB6RiU_Mk1v6eJ3EVweBFGoV5yKjcyNNtmuAY5VIegF37S8gLGKbq7_Viao*&hosted=false" width="100%" height="100%" frameborder="0" style="border: 0; overflow: hidden; min-height: 900px; min-width: 800px;"></iframe>
+      </div>
+    </section>
+
+    <!-- 5. UPLOAD — your own upload page, embedded. -->
+    <section id="upload">
+      <div class="head"><span class="num">5</span><h2>Upload material (Send your pictures and video here)</h2></div>
+     
+      <a class="extlink" href="upload.html" target="_blank" rel="noopener">Open the uploader in a new tab</a>
+      <div class="frame">
+        <iframe src="upload.html" height="900" title="Upload material"></iframe>
+      </div>
+    </section>
+
+    <footer>
+      Trouble with anything on this page? Email <a href="mailto:bhhproductions@gmail.com">bhhproductions@gmail.com</a> or call 310-740-7886.
+    </footer>
+
+  </div>
+</body>
+</html>
